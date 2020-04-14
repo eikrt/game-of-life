@@ -1,7 +1,7 @@
 OBJS = app.c
 
 CC = gcc
-COMPILER_FLAGS = -w
+
 
 LINKER_FLAGS = -lSDL2
 OBJ_NAME = application
