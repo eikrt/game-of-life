@@ -1,14 +1,11 @@
 import curses
 import copy
 from world.tile import Tile
-def init():
-	
-	
+def init(): #initializes curses
 	stdscr = curses.initscr()
 	stdscr.clear()
 	stdscr.refresh()
 	stdscr.getkey()
-		
 	curses.noecho()
 	curses.cbreak()
 	curses.halfdelay(10)
@@ -21,58 +18,47 @@ def init():
 	pad = curses.newpad(100,100)
 	return stdscr, win, pad
 	
-def loop(stdscr, win, pad):
-
-	isSetting = False
+def loop(stdscr, win, pad): #main loop
+	isSetting = False #in setting mode you put manually alive cells
 	running = True
 	mapWidth = 99
 	mapHeight = 99
 	cursorX = 0
 	cursorY = 0
-	map = [[0 for x in range(mapWidth)] for y in range(mapHeight)]
-	for y in range(mapWidth):
+	map = [[0 for x in range(mapWidth)] for y in range(mapHeight)] #init map
+	for y in range(mapWidth): #... continues initializing map
 		for x in range(mapHeight):
 			map[y][x] = Tile('0', x,y)
 	while(running == True):
-
-
-
-
-
-		stdscr.addstr(0,0, 'Game Of Life', curses.A_REVERSE)
+		stdscr.addstr(0,0, 'Game Of Life', curses.A_REVERSE) ##visualized mode
 		mode = 'RUN'
 		if isSetting == False:
 			mode = 'SET'
 		stdscr.addstr(1,0, 'MODE: ' + mode, curses.A_REVERSE)
 		stdscr.refresh()
 
-
-
-
-		for y in range (0,mapWidth):
+		for y in range (0,mapWidth): #drawing
 			for x in range (0,mapHeight):
 				map[y][x].logic()		
 				if x == cursorX and y == cursorY:
-					pad.addch(y,x,ord(str(map[y][x].sym)), curses.A_UNDERLINE)
+					pad.addch(y,x,ord(str(map[y][x].sym)), curses.A_REVERSE)
 				elif map[y][x].alive == True:
 					pad.addch(y,x,ord(str(map[y][x].sym)), curses.A_REVERSE)
 				else:
 					pad.addch(y,x,ord(str(map[y][x].sym)))
 
-
 		pad.refresh(0,0,5,5,20,75)
 
-		if isSetting == True:	
+		if isSetting == True: #add alive cells	
 			changeMap = copy.deepcopy(map)
 			for y in range (0,mapWidth):
 				for x in range (0,mapHeight):
 					map[y][x].addCells(changeMap)			
-
-			for y in range (0,mapWidth):
+			for y in range (0,mapWidth): #kill cells
 				for x in range (0,mapHeight):
 					map[y][x].removeCells(changeMap)
 		
-		c = stdscr.getch()
+		c = stdscr.getch() #keyboard input:
 		if c == ord('g'):
 			isSetting = not isSetting
 		elif c == ord('w'):
@@ -86,15 +72,9 @@ def loop(stdscr, win, pad):
 		elif c == ord('x'):
 			map[cursorY][cursorX].alive = True
 
-		
-			
-				
 		elif c == ord('q'):
 			running = False
-			
 	quit(stdscr)	
-
-
 
 def run():
 	stdscr, win, pad = init()

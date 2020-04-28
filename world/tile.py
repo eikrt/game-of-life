@@ -5,7 +5,7 @@ class Tile:
 		self.x = x
 		self.y = y
 		self.alive = False
-	def logic(self):
+	def logic(self): #checks if alive
 		
 		if self.alive == True:
 			self.sym = ' '
