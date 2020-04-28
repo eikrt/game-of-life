@@ -1,10 +1,10 @@
-##Game Of Life
+# Game Of Life
 
-##Description
+## Description
 	
 	tiny version of John Conway's game of life. Made with python and curses library
 
-##Running
+## Running
 	python3 app.py in main directory
 
 
