@@ -6,5 +6,5 @@ A tiny version of John Conway's game of life. Made with python and curses librar
 
 ## Running
 
-python3 app.py in main directory
+python3 -m game-of-life in main directory
 

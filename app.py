@@ -1,6 +1,6 @@
 import curses
 import copy
-from world.tile import Tile
+from .world.tile import Tile
 def init(): #initializes curses
 	stdscr = curses.initscr()
 	stdscr.clear()
