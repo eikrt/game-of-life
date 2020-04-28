@@ -1,4 +1,5 @@
 import curses
+import copy
 from world.tile import Tile
 def init():
 	
@@ -22,41 +23,58 @@ def init():
 	
 def loop(stdscr, win, pad):
 
+	isSetting = False
 	running = True
 	mapWidth = 99
 	mapHeight = 99
 	cursorX = 0
 	cursorY = 0
-	map = [[0 for x in range(99)] for y in range(99)]
-	for y in range(99):
-		for x in range(99):
+	map = [[0 for x in range(mapWidth)] for y in range(mapHeight)]
+	for y in range(mapWidth):
+		for x in range(mapHeight):
 			map[y][x] = Tile('0', x,y)
 	while(running == True):
 
 
 
 
+
 		stdscr.addstr(0,0, 'Game Of Life', curses.A_REVERSE)
+		mode = 'RUN'
+		if isSetting == False:
+			mode = 'SET'
+		stdscr.addstr(1,0, 'MODE: ' + mode, curses.A_REVERSE)
 		stdscr.refresh()
+
+
+
 
 		for y in range (0,mapWidth):
 			for x in range (0,mapHeight):
-				
-				map[x][y].logic(map)
+				map[y][x].logic()		
 				if x == cursorX and y == cursorY:
-					pad.addch(y,x,ord(str(map[x][y].sym)), curses.A_REVERSE)
+					pad.addch(y,x,ord(str(map[y][x].sym)), curses.A_UNDERLINE)
+				elif map[y][x].alive == True:
+					pad.addch(y,x,ord(str(map[y][x].sym)), curses.A_REVERSE)
 				else:
-					pad.addch(y,x,ord(str(map[x][y].sym)))
-				
-
-					
+					pad.addch(y,x,ord(str(map[y][x].sym)))
 
 
 		pad.refresh(0,0,5,5,20,75)
+
+		if isSetting == True:	
+			changeMap = copy.deepcopy(map)
+			for y in range (0,mapWidth):
+				for x in range (0,mapHeight):
+					map[y][x].addCells(changeMap)			
+
+			for y in range (0,mapWidth):
+				for x in range (0,mapHeight):
+					map[y][x].removeCells(changeMap)
 		
 		c = stdscr.getch()
-		if c == ord('q'):
-			running = False
+		if c == ord('g'):
+			isSetting = not isSetting
 		elif c == ord('w'):
 			cursorY -=1
 		elif c == ord('a'):
@@ -66,12 +84,13 @@ def loop(stdscr, win, pad):
 		elif c == ord('d'):	
 			cursorX +=1
 		elif c == ord('x'):
-
 			map[cursorY][cursorX].alive = True
 
-			map[cursorY+1][cursorX+1].alive = True
-
+		
+			
 				
+		elif c == ord('q'):
+			running = False
 			
 	quit(stdscr)	
 
