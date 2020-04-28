@@ -30,7 +30,11 @@ def loop(stdscr, win, pad): #main loop
 		for x in range(mapHeight):
 			map[y][x] = Tile('0', x,y)
 	while(running == True):
-		stdscr.addstr(0,0, 'Game Of Life', curses.A_REVERSE) ##visualized mode
+		try:
+			stdscr.addstr(0,0, 'Game Of Life', curses.A_REVERSE) ##visualized mode
+			stdscr.addstr(22,0, 'PRESS G TO SWITCH BETWEEN MODES', curses.A_REVERSE)
+		except curses.error as e:
+			pass
 		mode = 'RUN'
 		if isSetting == False:
 			mode = 'SET'
